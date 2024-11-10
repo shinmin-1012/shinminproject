@@ -4,11 +4,11 @@ name: CI for NestJS
 on:
   pull_request:
     branches:
-      - dev
+      - develop
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       # Check out the code from the repository
