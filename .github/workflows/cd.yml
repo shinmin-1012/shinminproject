@@ -41,6 +41,7 @@ jobs:
     - name: Build and push Docker image
       run: |
         set IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
+        echo %IMAGE_NAME%
         docker build -t %IMAGE_NAME% .
         docker push %IMAGE_NAME%
 
