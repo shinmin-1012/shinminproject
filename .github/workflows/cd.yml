@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop  # Adjust this to your default branch
-
 jobs:
   build-deploy:
     runs-on: self-hosted
@@ -17,22 +16,21 @@ jobs:
       run: choco install -y 7zip 
 
     - name: Install Python 3.9
-      run: choco install -y python --version=3.9.0
+      run: choco install -y python --version 3.9.0
 
     - name: Download Google Cloud SDK
       run: Invoke-WebRequest -Uri "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-353.0.0-windows-x86_64.zip" -OutFile "gcloud-sdk.zip"
-      shell: pwsh
 
     - name: Unzip Google Cloud SDK
       run: 7z x gcloud-sdk.zip -oC:\gcloud-sdk -y
-
-    - name: Add gcloud and Python to PATH
+  
+    - name: Add gcloud to PATH
       run: |
-        echo "C:\gcloud-sdk\google-cloud-sdk\bin" >> $env:GITHUB_PATH
-        echo "C:\Python39" >> $env:GITHUB_PATH
-      shell: pwsh
+        echo C:\gcloud-sdk\google-cloud-sdk\bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        echo C:\Python39 | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
 
-    - name: Authenticate with Google Cloud
+
+    - id: 'auth'
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
@@ -41,17 +39,14 @@ jobs:
       run: gcloud auth configure-docker
 
     - name: Build and push Docker image
-      env:
-        IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
       run: |
-        docker build -t $IMAGE_NAME .
-        docker push $IMAGE_NAME
-      shell: bash
+        set IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
+        docker build -t %IMAGE_NAME% .
+        docker push %IMAGE_NAME%
 
     - name: Deploy to GKE
       env:
-        IMAGE_NAME: gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
+        KUBECONFIG: /home/runner/.kube/config
       run: |
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl set image deployment/my-app my-app=$IMAGE_NAME
-      shell: bash
+        kubectl set image deployment/my-app my-app=%IMAGE_NAME%
