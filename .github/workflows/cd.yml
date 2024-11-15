@@ -22,7 +22,7 @@ jobs:
       run: Invoke-WebRequest -Uri "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-353.0.0-windows-x86_64.zip" -OutFile "gcloud-sdk.zip"
 
     - name: Unzip Google Cloud SDK
-      run: 7z x gcloud-sdk.zip -oC:\gcloud-sdk --quiet
+      run: 7z x gcloud-sdk.zip -oC:\gcloud-sdk -y
   
     - name: Add gcloud to PATH
       run: |
