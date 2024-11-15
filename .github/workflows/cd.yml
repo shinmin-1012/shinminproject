@@ -12,6 +12,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install unzip
+      run: choco install -y unzip
+
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
