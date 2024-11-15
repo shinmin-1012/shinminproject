@@ -38,9 +38,15 @@ jobs:
     - name: Authenticate Docker to GCR
       run: gcloud auth configure-docker
 
-    - name: Build and push Docker image
+    - name: Set IMAGE_NAME environment variable
+      id: set_image_name
       run: |
         set IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
+        echo "IMAGE_NAME=%IMAGE_NAME%"  
+        echo "IMAGE_NAME=%IMAGE_NAME%" >> $GITHUB_ENV
+
+    - name: Build and push Docker image
+      run: |
         echo %IMAGE_NAME%
         docker build -t %IMAGE_NAME% .
         docker push %IMAGE_NAME%
