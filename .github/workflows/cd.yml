@@ -43,17 +43,17 @@ jobs:
       run: |
         set IMAGE_NAME=gcr.io/${{ secrets.GCP_PROJECT_ID }}/my-app:${{ github.sha }}
         echo "IMAGE_NAME=%IMAGE_NAME%"  
-        echo "IMAGE_NAME=%IMAGE_NAME%" >> $GITHUB_ENV
+        echo "IMAGE_NAME=IMAGE_NAME" >> $GITHUB_ENV
 
     - name: Build and push Docker image
       run: |
-        echo %IMAGE_NAME%
-        docker build -t %IMAGE_NAME% .
-        docker push %IMAGE_NAME%
+        echo IMAGE_NAME
+        docker build -t IMAGE_NAME .
+        docker push IMAGE_NAME
 
     - name: Deploy to GKE
       env:
         KUBECONFIG: /home/runner/.kube/config
       run: |
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl set image deployment/my-app my-app=%IMAGE_NAME%
+        kubectl set image deployment/my-app my-app=IMAGE_NAME
