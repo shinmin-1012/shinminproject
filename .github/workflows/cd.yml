@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - develop  # Adjust this to your default branch
-
 jobs:
   build-deploy:
     runs-on: self-hosted
