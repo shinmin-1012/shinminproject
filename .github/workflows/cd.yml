@@ -49,4 +49,4 @@ jobs:
         KUBECONFIG: /home/runner/.kube/config
       run: |
         gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl set image deployment/my-app my-app=$IMAGE_NAME
+        kubectl set image deployment/my-app my-app=%IMAGE_NAME%
