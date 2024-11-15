@@ -15,6 +15,9 @@ jobs:
     - name: Install 7-Zip
       run: choco install -y 7zip 
 
+    - name: Install Python 3.9
+      run: choco install -y python --version 3.9.0
+
     - name: Download Google Cloud SDK
       run: Invoke-WebRequest -Uri "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-353.0.0-windows-x86_64.zip" -OutFile "gcloud-sdk.zip"
 
@@ -24,6 +27,7 @@ jobs:
     - name: Add gcloud to PATH
       run: |
         echo C:\gcloud-sdk\google-cloud-sdk\bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+        echo C:\Python39 | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
 
 
     - id: 'auth'
