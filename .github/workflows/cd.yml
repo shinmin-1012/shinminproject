@@ -12,11 +12,25 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Install 7-Zip
+      run: choco install -y 7zip 
+
+    - name: Download Google Cloud SDK
+      run: Invoke-WebRequest -Uri "https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-353.0.0-windows-x86_64.zip" -OutFile "gcloud-sdk.zip"
+
+    - name: Unzip Google Cloud SDK
+      run: 7z x gcloud-sdk.zip -oC:\gcloud-sdk
+  
+    - name: Add gcloud to PATH
+      run: |
+        echo C:\gcloud-sdk\google-cloud-sdk\bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+
+
     - id: 'auth'
       uses: google-github-actions/auth@v1
       with:
         credentials_json: ${{ secrets.GCP_SA_KEY }}
-        
+
     - name: Set up Google Cloud SDK
       uses: google-github-actions/setup-gcloud@v1
       with:
