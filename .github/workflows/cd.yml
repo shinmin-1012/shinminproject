@@ -30,6 +30,11 @@ jobs:
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
+    - name: Replace placeholders in deployment.yaml
+      run: |
+        sed -i "s|\${GCP_PROJECT_ID}|${{ secrets.GCP_PROJECT_ID }}|g" k8s/deployment.yaml
+        sed -i "s|\${GITHUB_SHA}|${{ github.sha }}|g" k8s/deployment.yaml
+
     - name: Authenticate Kubectl with GKE
       run: |
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
