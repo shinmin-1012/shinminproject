@@ -30,9 +30,9 @@ jobs:
         docker build -t $IMAGE_NAME .
         docker push $IMAGE_NAME
 
-    - name: Deploy to GKE
-      env:
-        KUBECONFIG: /home/shinminproject/.kube/config
+    - name: Authenticate Kubectl with GKE
       run: |
-        gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}
-        kubectl set image deployment/my-app my-app=$IMAGE_NAME
+          gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_ZONE }}--${{ secrets.GCP_PROJECT_ID }}
+
+    - name: Deploy to GKE
+      run: kubectl apply -f k8s/deployment.yaml
