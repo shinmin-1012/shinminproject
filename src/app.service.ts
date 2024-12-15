@@ -10,6 +10,7 @@ export class AppService {
     try {
       const host = 'my-app-api.default.svc.cluster.local';
       const port = '3000';
+      console.log(host);
       const response = await firstValueFrom(
         this.httpService.get(`${host}:${port}`), // Correct URL
       );
