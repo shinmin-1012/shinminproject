@@ -8,11 +8,10 @@ export class AppService {
 
   async getHello(): Promise<string> {
     try {
-      const host = 'my-app-api.default.svc.cluster.local';
-      const port = '3000';
+      const host = 'my-app-api.default.svc.cluster.local:3000';
       console.log(host);
       const response = await firstValueFrom(
-        this.httpService.get(`${host}:${port}`), // Correct URL
+        this.httpService.get(host), // Correct URL
       );
       return response.data; // Return the response data
     } catch (error) {
